@@ -41,7 +41,7 @@
             "timestamp": "={{$now}}",
             "name": "={{ $json.body.name }}",
             "email": "={{ $json.body.email }}",
-            "source": "={{\"webhook\"}}"
+            "source": "={{ $json.body.source }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -121,7 +121,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "8dd39679-9495-49dc-811c-1c920afdea55",
+  "versionId": "b4bff54d-d4e4-4c99-97f9-c176a037f10c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "f80905aafb664ffa24ecff75933986b4fe1004ef4ea136a5820c0cff67feb06c"
