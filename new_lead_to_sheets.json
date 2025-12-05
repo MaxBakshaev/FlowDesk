@@ -1,0 +1,131 @@
+{
+  "name": "FlowDesk – New Lead to Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "flowdesk/new-lead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9a88e7ab-d5f1-4c83-bdc3-c4452bec4f52",
+      "name": "Webhook",
+      "webhookId": "4fbfe6d3-5ffa-4feb-98ea-238e28078949"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1xsVZhh7ElXrUAEWAsiRXhEmfUujqtRBS9GDTktWK6HQ",
+          "mode": "list",
+          "cachedResultName": "FlowDesk Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xsVZhh7ElXrUAEWAsiRXhEmfUujqtRBS9GDTktWK6HQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Лист1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xsVZhh7ElXrUAEWAsiRXhEmfUujqtRBS9GDTktWK6HQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{$now}}",
+            "name": "={{ $json.body.name }}",
+            "email": "={{ $json.body.email }}",
+            "source": "={{\"webhook\"}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "6fc07b6e-2ac1-4cff-9411-b6436d6b6bed",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "JwgyLstbTPJNE8ca",
+          "name": "google-sheets-flowdesk"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8dd39679-9495-49dc-811c-1c920afdea55",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f80905aafb664ffa24ecff75933986b4fe1004ef4ea136a5820c0cff67feb06c"
+  },
+  "id": "vT5Ot2MVli7aDq8q",
+  "tags": []
+}
