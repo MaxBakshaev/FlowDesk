@@ -37,3 +37,6 @@ async def create_lead(lead: LeadIn, request: Request):
         )
 
     return {"status": "ok", "forwarded_to_n8n": True}
+
+
+# python -m uvicorn backend.fastapi_app.main:app --reload

@@ -90,7 +90,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        208,
+        224,
         0
       ],
       "id": "6fc07b6e-2ac1-4cff-9411-b6436d6b6bed",
@@ -99,6 +99,28 @@
         "googleApi": {
           "id": "JwgyLstbTPJNE8ca",
           "name": "google-sheets-flowdesk"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "7448969944",
+        "text": "={{\"Новый лид:\\nИмя: \" + $json.name + \"\\nEmail: \" + $json.email + \"\\nИсточник: \" + $json.source}}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "f6c73516-01ba-4c7a-a1f1-a16470b5f71d",
+      "name": "Send a text message",
+      "webhookId": "9a77305f-4116-4f25-902d-5722e4b884ce",
+      "credentials": {
+        "telegramApi": {
+          "id": "g16WfNAKI0sbjunB",
+          "name": "telegram-flowdesk-bot"
         }
       }
     }
@@ -115,13 +137,24 @@
           }
         ]
       ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "b4bff54d-d4e4-4c99-97f9-c176a037f10c",
+  "versionId": "51af78c9-490b-4684-a0f3-dc6a367b1d35",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "f80905aafb664ffa24ecff75933986b4fe1004ef4ea136a5820c0cff67feb06c"
