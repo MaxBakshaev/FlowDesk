@@ -106,7 +106,9 @@
       "parameters": {
         "chatId": "7448969944",
         "text": "={{\"Новый лид:\\nИмя: \" + $json.name + \"\\nEmail: \" + $json.email + \"\\nИсточник: \" + $json.source}}",
-        "additionalFields": {}
+        "additionalFields": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -154,7 +156,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "51af78c9-490b-4684-a0f3-dc6a367b1d35",
+  "versionId": "b19f7492-ce7c-4a13-ad06-d416d2c1e230",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "f80905aafb664ffa24ecff75933986b4fe1004ef4ea136a5820c0cff67feb06c"

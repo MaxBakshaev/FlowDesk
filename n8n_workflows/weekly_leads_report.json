@@ -1,0 +1,145 @@
+{
+  "name": "FlowDesk – Weekly Leads Report",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 7,
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b1567934-66df-4005-916d-ee061208b50c",
+      "name": "Cron"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1xsVZhh7ElXrUAEWAsiRXhEmfUujqtRBS9GDTktWK6HQ",
+          "mode": "list",
+          "cachedResultName": "FlowDesk Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xsVZhh7ElXrUAEWAsiRXhEmfUujqtRBS9GDTktWK6HQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Лист1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xsVZhh7ElXrUAEWAsiRXhEmfUujqtRBS9GDTktWK6HQ/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "39318cf9-7c9c-48c6-96c2-4f2493d16ecf",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "JwgyLstbTPJNE8ca",
+          "name": "google-sheets-flowdesk"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import datetime\n\nitems = _input.all()  # все входные строки\n\ndays_back = 7\nnow = datetime.datetime.now(datetime.timezone.utc)\ntime_from = now - datetime.timedelta(days=days_back)\n\ntotal = 0\nby_source = {}\n\ndef parse_dt(s):\n    try:\n        return datetime.datetime.fromisoformat(s)\n    except:\n        return None\n\nfor item in items:\n    row = item[\"json\"]\n\n    ts_str = row.get(\"timestamp\")\n    if not ts_str:\n        continue\n\n    ts = parse_dt(ts_str)\n    if not ts:\n        continue\n\n    if ts.tzinfo is None:\n        ts = ts.replace(tzinfo=datetime.timezone.utc)\n\n    if not (time_from <= ts <= now):\n        continue\n\n    total += 1\n    source = row.get(\"source\", \"unknown\")\n    by_source[source] = by_source.get(source, 0) + 1\n\ndef fmt(d):\n    return d.strftime(\"%d.%m.%Y\")\n\nperiod = f\"{fmt(time_from)} — {fmt(now)}\"\n\ntext = f\"📊 Отчёт по лидам\\nПериод: {period}\\n\\n\"\ntext += f\"Всего лидов: {total}\\n\\n\"\ntext += \"По источникам:\\n\"\n\nif not by_source:\n    text += \"• за период лидов нет\\n\"\nelse:\n    for src, count in by_source.items():\n        text += f\"• {src} — {count}\\n\"\n\n# n8n должен вернуть список items, поэтому:\nreturn [\n    {\n        \"json\": {\n            \"reportText\": text,\n            \"total\": total,\n            \"by_source\": by_source,\n            \"from\": time_from.isoformat(),\n            \"to\": now.isoformat()\n        }\n    }\n]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "0c4514df-f379-4d54-9400-7dd307e918ba",
+      "name": "Code in Python (Beta)"
+    },
+    {
+      "parameters": {
+        "chatId": "7448969944",
+        "text": "={{ $json.reportText }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_notification": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        624,
+        0
+      ],
+      "id": "c7f954a8-f9a2-4fde-afc3-cf7b85f346f1",
+      "name": "Send a text message",
+      "webhookId": "128b4e08-801d-43f5-b41b-4a38742169bf",
+      "credentials": {
+        "telegramApi": {
+          "id": "g16WfNAKI0sbjunB",
+          "name": "telegram-flowdesk-bot"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in Python (Beta)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python (Beta)": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "338dd9b7-b909-4b67-9514-b5adeb0f9468",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f80905aafb664ffa24ecff75933986b4fe1004ef4ea136a5820c0cff67feb06c"
+  },
+  "id": "j97pphAYSCK7MZot",
+  "tags": []
+}
